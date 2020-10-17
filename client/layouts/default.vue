@@ -7,6 +7,7 @@
     >
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <addswag />
     </v-app-bar>
     <v-main>
       <v-container>
@@ -23,6 +24,8 @@
 </template>
 
 <script>
+import addswag from '../components/addswag'
+
 export default {
   data () {
     return {
