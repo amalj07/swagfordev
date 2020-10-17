@@ -12,6 +12,17 @@ admin.initializeApp({
 
 const db = admin.firestore()
 
+app.get('/', async(req, res) => {
+    const allswags = []
+    const swags = db.collection('swagDetails')
+    const snapshot = await swags.get()
+    snapshot.forEach(doc => {
+        allswags.push({id: doc.id, name: doc.data().name, description: doc.data().description, url: doc.data().url, imgUrl: doc.data().imgUrl})
+    })
+
+    res.send(allswags)
+})
+
 app.post('/addswag', async(req, res) => {
     const { name, description, url, imgUrl } = req.body
 
