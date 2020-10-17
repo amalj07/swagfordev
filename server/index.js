@@ -6,11 +6,30 @@ const app = express()
 
 app.use(express.urlencoded({extended: false}))
 
+// Initialize firebase admin SDK
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount.serviceAccountKey)
+    credential: admin.credential.cert(serviceAccount.serviceAccountKey),
+    storageBucket: "swagfordevs.appspot.com"
 })
 
+// firestore
 const db = admin.firestore()
+
+// Cloud storage
+const bucket = admin.storage().bucket()
+
+// Upload file to cloud storage
+async function uploadFile() {
+    const filename = '../client/static/download.jpeg'
+    await bucket.upload(filename, {
+        gzip: true,
+        metadata: {
+            cacheControl: 'public, max-age=31536000',
+        }
+    })
+
+    return `gs://${bucket.name}/${filename}`
+}
 
 app.get('/', async(req, res) => {
     const allswags = []
@@ -24,7 +43,9 @@ app.get('/', async(req, res) => {
 })
 
 app.post('/addswag', async(req, res) => {
-    const { name, description, url, imgUrl } = req.body
+    const { name, description, url } = req.body
+
+    const imgUrl = await uploadFile().catch(console.error);    
 
     const newSwag = {
         name: name,
