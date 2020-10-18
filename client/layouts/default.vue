@@ -18,7 +18,6 @@
       :absolute="!fixed"
       app
     >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
@@ -30,7 +29,7 @@ export default {
   data () {
     return {
       fixed: false,
-      title: 'SwagForDev'
+      title: 'SwagForDevs'
     }
   }
 }
