@@ -1,4 +1,5 @@
 <template>
+  <div>
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -109,6 +110,31 @@
         </v-form> 
       </v-card>
     </v-dialog>
+    <!-- Add swag loadig dialog -->
+    <v-dialog
+      v-model="addswagdialog"
+      hide-overlay
+      persistent
+      width="500"
+    >
+      <v-card
+        light
+        height=58
+      >
+        <v-card-text
+          class="pt-2"
+          align="center"
+        >
+          Adding your swag to the awesome swag list...
+          <v-progress-linear
+            indeterminate
+            color="grey"
+            class="mt-1"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -116,6 +142,7 @@ export default {
     data () {
         return {
           dialog: false,
+          addswagdialog: false,
           swag: {
             name: "",
             description: "",
@@ -133,6 +160,7 @@ export default {
     methods: {
       addSwag() {
         if(this.$refs.addSwagForm.validate()) {
+          this.addswagdialog = true
           const formData = new FormData()
           formData.append("name", this.swag.name)
           formData.append("description", this.swag.description)
@@ -143,8 +171,12 @@ export default {
               "Content-Type": "multipart/form-data"
             }
           }).then(response => {
+            this.addswagdialog = false
+            this.dialog = false
             console.log(response)
           }).catch(error => {
+            this.addswagdialog = false
+            this.dialog = false
             console.log(error.response.data)
           })
         }
