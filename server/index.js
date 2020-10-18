@@ -51,7 +51,7 @@ app.post('/addswag', async(req, res) => {
     try {
         const { name, description, url, } = req.body
         
-        if (!req.files) {
+        if (!req.files || !req.body.data || !req.body.description || !req.body.url) {
             res.status(400).send('Error, could not add data');
             return;
         }

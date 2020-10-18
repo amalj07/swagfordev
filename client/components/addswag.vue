@@ -32,7 +32,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-form>
+        <v-form ref="addSwagForm">
           <v-container>
             <v-row>
               <v-col
@@ -49,6 +49,8 @@
                         <v-list-item-title>Name</v-list-item-title>
                         <v-text-field
                           v-model="swag.name"
+                          :rules="inputRule"
+                          validate-on-blur
                         ></v-text-field>  
                       </v-list-item-content>
                     </v-list-item>
@@ -57,8 +59,9 @@
                         <v-list-item-title>How to get?</v-list-item-title>
                         <v-textarea
                             v-model="swag.description"
-                            rows="1"
+                            rows="2"
                             auto-grow
+                            :rules="inputRule"
                         ></v-textarea>
                       </v-list-item-content>
                     </v-list-item>
@@ -67,6 +70,7 @@
                         <v-list-item-title>URL</v-list-item-title>
                         <v-text-field
                           v-model="swag.url"
+                          :rules="inputRule"
                         ></v-text-field>  
                       </v-list-item-content>
                     </v-list-item>
@@ -76,6 +80,7 @@
                         <v-list-item-subtitle>
                           <v-file-input
                             v-model="swag.image"
+                            :rules="imageUploadRule"
                           ></v-file-input>
                         </v-list-item-subtitle>
                       </v-list-item-content>
@@ -116,25 +121,33 @@ export default {
             description: "",
             url: "",
             image: null
-          }
+          },
+          inputRule: [
+            value => value.length > 0 || 'required',
+          ],
+          imageUploadRule: [
+            image => image != null || 'required'
+          ]
         }
     },
     methods: {
       addSwag() {
-        const formData = new FormData()
-        formData.append("name", this.swag.name)
-        formData.append("description", this.swag.description)
-        formData.append("url", this.swag.url)
-        formData.append("image", this.swag.image)
-        this.$axios.$post('/addswag', formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }).then(response => {
-          console.log(response)
-        }).catch(error => {
-          console.log(error.response.data)
-        })
+        if(this.$refs.addSwagForm.validate()) {
+          const formData = new FormData()
+          formData.append("name", this.swag.name)
+          formData.append("description", this.swag.description)
+          formData.append("url", this.swag.url)
+          formData.append("image", this.swag.image)
+          this.$axios.$post('/addswag', formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          }).then(response => {
+            console.log(response)
+          }).catch(error => {
+            console.log(error.response.data)
+          })
+        }
       }
     }
 }
