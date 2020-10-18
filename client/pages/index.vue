@@ -2,7 +2,7 @@
 <div>
   <div class="text-center my-5">
     <h1>SwagForDevs</h1>
-    <p>Awsome swag opportunities for developers</p>
+    <p>Awesome swag opportunities for developers</p>
   </div>
   <center>
     <hr>
