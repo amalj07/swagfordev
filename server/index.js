@@ -51,13 +51,12 @@ app.post('/addswag', async(req, res) => {
     try {
         const { name, description, url, } = req.body
         
-        if (!req.files || !req.body.data || !req.body.description || !req.body.url) {
+        if (!req.files || !req.body.name || !req.body.description || !req.body.url) {
             res.status(400).send('Error, could not add data');
             return;
         }
         req.files[0].originalname = req.body.name.replace(/\s/g, "").toLowerCase()
         req.files[0].originalname = `${req.files[0].originalname}_${Date.now()}` 
-        console.log(req.files[0].originalname)
 
          // Create new blob in the bucket referencing the file
         const blob = bucket.file(req.files[0].originalname);
@@ -87,7 +86,6 @@ app.post('/addswag', async(req, res) => {
             }
         
             const result = await db.collection('swagDetails').add(newSwag)
-            console.log(publicUrl)
             res.status(200).send(`swag id: ${result.id}`)
         })
     

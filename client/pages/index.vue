@@ -79,7 +79,6 @@ export default {
    fetchData() {
      this.$axios.$get('/').then(response => {
        this.swags = response
-       console.log(this.swags)
      }).catch(error => {
        console.log(error)
      })
