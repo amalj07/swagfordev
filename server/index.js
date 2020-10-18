@@ -1,9 +1,12 @@
 const express = require('express')
 const admin = require('firebase-admin')
+const cors = require('cors')
+const multer = require('multer')
 const serviceAccount = require('./config')
 
 const app = express()
 
+app.use(cors())
 app.use(express.urlencoded({extended: false}))
 
 // Initialize firebase admin SDK
@@ -18,18 +21,15 @@ const db = admin.firestore()
 // Cloud storage
 const bucket = admin.storage().bucket()
 
-// Upload file to cloud storage
-async function uploadFile() {
-    const filename = '../client/static/download.jpeg'
-    await bucket.upload(filename, {
-        gzip: true,
-        metadata: {
-            cacheControl: 'public, max-age=31536000',
-        }
-    })
+// Initiate a memory storage engine to store file as Buffer objects
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5 MB size
+    }
+})
+app.use(upload.any())
 
-    return `gs://${bucket.name}/${filename}`
-}
 
 app.get('/', async(req, res) => {
     const allswags = []
@@ -43,21 +43,49 @@ app.get('/', async(req, res) => {
 })
 
 app.post('/addswag', async(req, res) => {
-    const { name, description, url } = req.body
+    try {
+        const { name, description, url, } = req.body
+        
+        if (!req.files) {
+            res.status(400).send('Error, could not add data');
+            return;
+        }
 
-    const imgUrl = await uploadFile().catch(console.error);    
-
-    const newSwag = {
-        name: name,
-        description: description,
-        url: url,
-        imgUrl: imgUrl,
-        createdAt: new Date()
+         // Create new blob in the bucket referencing the file
+        const blob = bucket.file(req.files[0].originalname);
+    
+         // Create writable stream and specifying file mimetype
+        const blobWriter = blob.createWriteStream({
+            metadata: {
+                contentType: req.files[0].mimetype
+            }
+        })
+    
+        blobWriter.on('error', (err) => {
+            console.log(err)
+        })
+    
+        blobWriter.on('finish', async () => {
+            const imgURl = `gs://${bucket.name}/${encodeURI(blob.name)}`
+    
+            const newSwag = {
+                name: name,
+                description: description,
+                url: url,
+                imgUrl: imgURl,
+                createdAt: new Date()
+            }
+        
+            const result = await db.collection('swagDetails').add(newSwag)
+            res.status(200).send(`swag id: ${result.id}`)
+        })
+    
+    
+        blobWriter.end(req.files[0].buffer);
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("Error, could not add data")
     }
-
-    const result = await db.collection('swagDetails').add(newSwag)
-
-    res.send(`New swag added with swag id: ${result.id}`)
 })
 
 
