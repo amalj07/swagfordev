@@ -10,40 +10,59 @@
   <div
     class="mt-10"
   >
-    <v-row>
-      <v-col
-        v-for="(swag, index) in swags"
-        :key="swag.id"
-        cols="12"
-        sm="4"
-      >
-        <v-card
-          max-width=350
+    <div
+      v-if="swags.length == 0"
+    >
+      <center>
+        <p>Getting the awesome list of swags...</p>
+        <v-progress-circular
+          color="grey"
+          :width="7"
+          :size="70"
+          indeterminate
+          rounded
+          height="6"
+        ></v-progress-circular>
+      </center>
+    </div>
+    <div
+      v-else
+    >
+      <v-row>
+        <v-col
+          v-for="(swag, index) in swags"
+          :key="swag.id"
+          cols="12"
+          sm="4"
         >
-          <v-card-title>
-            {{ swag.name }}
-          </v-card-title>
-          <center>
-            <v-img 
-              :src="swag.imgUrl"
-              height="300px"
-              width="340px"
-            ></v-img>
-          </center>
-          <v-card-text>
-            {{ swag.description }}
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              outlined
-              @click="openSwagDetails(index)"
-            >
-              Check it here
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
+          <v-card
+            max-width=350
+          >
+            <v-card-title>
+              {{ swag.name }}
+            </v-card-title>
+            <center>
+              <v-img 
+                :src="swag.imgUrl"
+                height="300px"
+                width="340px"
+              ></v-img>
+            </center>
+            <v-card-text>
+              {{ swag.description }}
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                outlined
+                @click="openSwagDetails(index)"
+              >
+                Check it here
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </div>
 </template>
