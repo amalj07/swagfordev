@@ -7,8 +7,8 @@
   <div>
     <v-row>
       <v-col
-        v-for="n in 5"
-        :key="n"
+        v-for="(swag, index) in swags"
+        :key="swag.id"
         cols="12"
         sm="4"
       >
@@ -16,19 +16,22 @@
           max-width=350
         >
           <v-card-title>
-            Hacktoberfest 2020
+            {{ swag.name }}
           </v-card-title>
-          <v-img class="ml-1"
-            src="/download.jpeg"
-            height="300px"
-            width="341px"
-          ></v-img>
+          <center>
+            <v-img 
+              :src="swag.imgUrl"
+              height="300px"
+              width="340px"
+            ></v-img>
+          </center>
           <v-card-text>
-            Make four Pull Requests (PRs) between October 1–31 in any time zone, and earn a limited edition T-shirt!
+            {{ swag.description }}
           </v-card-text>
           <v-card-actions>
             <v-btn
               outlined
+              @click="openSwagDetails(index)"
             >
               Check it here
             </v-btn>
@@ -43,6 +46,26 @@
 <script>
 
 export default {
-  
+  data() {
+    return {
+      swags: []
+    }
+  },
+  methods: {
+   fetchData() {
+     this.$axios.$get('/').then(response => {
+       this.swags = response
+       console.log(this.swags)
+     }).catch(error => {
+       console.log(error)
+     })
+   },
+   openSwagDetails(index) {
+     window.open(this.swags[index].url)
+   }
+  },
+  created() {
+    this.fetchData()
+  }
 }
 </script>

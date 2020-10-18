@@ -32,14 +32,19 @@ app.use(upload.any())
 
 
 app.get('/', async(req, res) => {
-    const allswags = []
-    const swags = db.collection('swagDetails')
-    const snapshot = await swags.get()
-    snapshot.forEach(doc => {
-        allswags.push({id: doc.id, name: doc.data().name, description: doc.data().description, url: doc.data().url, imgUrl: doc.data().imgUrl})
-    })
-
-    res.send(allswags)
+    try {
+        const allswags = []
+        const swags = db.collection('swagDetails').orderBy("createdAt", "desc")
+        const snapshot = await swags.get()
+        snapshot.forEach(doc => {
+            allswags.push({id: doc.id, name: doc.data().name, description: doc.data().description, url: doc.data().url, imgUrl: doc.data().imgUrl})
+        })
+    
+        res.status(200).send(allswags)
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("Error, could not fetch data")
+    }
 })
 
 app.post('/addswag', async(req, res) => {
@@ -50,6 +55,9 @@ app.post('/addswag', async(req, res) => {
             res.status(400).send('Error, could not add data');
             return;
         }
+        req.files[0].originalname = req.body.name.replace(/\s/g, "").toLowerCase()
+        req.files[0].originalname = `${req.files[0].originalname}_${Date.now()}` 
+        console.log(req.files[0].originalname)
 
          // Create new blob in the bucket referencing the file
         const blob = bucket.file(req.files[0].originalname);
@@ -66,17 +74,20 @@ app.post('/addswag', async(req, res) => {
         })
     
         blobWriter.on('finish', async () => {
-            const imgURl = `gs://${bucket.name}/${encodeURI(blob.name)}`
+            const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${
+                bucket.name
+            }/o/${encodeURI(blob.name)}?alt=media`;
     
             const newSwag = {
                 name: name,
                 description: description,
                 url: url,
-                imgUrl: imgURl,
+                imgUrl: publicUrl,
                 createdAt: new Date()
             }
         
             const result = await db.collection('swagDetails').add(newSwag)
+            console.log(publicUrl)
             res.status(200).send(`swag id: ${result.id}`)
         })
     
