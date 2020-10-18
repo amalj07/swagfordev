@@ -1,10 +1,15 @@
 <template>
 <div>
-  <div class="text-center">
-    <h1>SwagForDev</h1>
+  <div class="text-center my-5">
+    <h1>SwagForDevs</h1>
     <p>Awsome swag opportunities for developers</p>
   </div>
-  <div>
+  <center>
+    <hr>
+  </center>
+  <div
+    class="mt-10"
+  >
     <v-row>
       <v-col
         v-for="(swag, index) in swags"
@@ -69,3 +74,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+hr {
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 9%;
+}
+</style>

@@ -30,7 +30,7 @@ export default {
   data () {
     return {
       fixed: false,
-      title: 'SwagForDev'
+      title: 'SwagForDevs'
     }
   }
 }

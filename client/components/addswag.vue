@@ -16,27 +16,21 @@
       </template>
       <v-card>
         <v-toolbar
-          dark
-          color="primary"
+          flat
         >
+          <v-toolbar-title
+            class="ml-2"
+          >Add new swag details</v-toolbar-title>
+          <v-spacer></v-spacer>
           <v-btn
+            :ripple=false
+            class="dialogcloseicon mr-2"
             icon
-            dark
+            light
             @click="dialog = false"
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>Add new swag details</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              dark
-              text
-              @click="addSwag"
-            >
-              Save
-            </v-btn>
-          </v-toolbar-items>
         </v-toolbar>
         <v-form>
           <v-container>
@@ -46,7 +40,7 @@
               >
                 <v-card
                   class="mt-5"
-                  width=700px
+                  width=600px
                   outlined
                 >
                   <v-list>
@@ -89,6 +83,22 @@
                   </v-list>
                 </v-card>
               </v-col>
+              <v-col>
+                <center>
+                  <div
+                    class="mt-16 ml-3"
+                  >
+                    <h1>Add your awesome swag to amazing list of swags</h1>
+                    <v-btn
+                      outlined
+                      class="mt-7"
+                      @click="addSwag"
+                    >
+                      Add Swag
+                    </v-btn>
+                  </div>
+                </center>
+              </v-col>
             </v-row>
           </v-container>
         </v-form> 
@@ -129,3 +139,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.dialogcloseicon::before{
+  background-color: transparent;
+}
+</style>
