@@ -11,6 +11,7 @@
           outlined
           v-bind="attrs"
           v-on="on"
+          :ripple=false
         >
           Add Swag
         </v-btn>
@@ -25,7 +26,7 @@
           <v-spacer></v-spacer>
           <v-btn
             :ripple=false
-            class="dialogcloseicon mr-2"
+            class="btns mr-2"
             icon
             light
             @click="dialog = false"
@@ -63,6 +64,7 @@
                             rows="2"
                             auto-grow
                             :rules="inputRule"
+                            validate-on-blur
                         ></v-textarea>
                       </v-list-item-content>
                     </v-list-item>
@@ -72,6 +74,7 @@
                         <v-text-field
                           v-model="swag.url"
                           :rules="inputRule"
+                          validate-on-blur
                         ></v-text-field>  
                       </v-list-item-content>
                     </v-list-item>
@@ -97,6 +100,7 @@
                     <h1>Add your awesome swag to amazing list of swags</h1>
                     <v-btn
                       outlined
+                      :ripple=false
                       class="mt-7"
                       @click="addSwag"
                     >
@@ -143,6 +147,27 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+     <!-- Swag reponse snackbar -->
+    <v-snackbar
+      v-model="snackbar"
+      light
+      top
+      content-class="grey--text text--darken-3"
+    >
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="grey"
+          text
+          v-bind="attrs"
+          :ripple=false
+          @click="snackbar = false"
+          class="btns"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -158,6 +183,8 @@ export default {
             url: "",
             image: null
           },
+          snackbar:false,
+          snackbarText: "",
           inputRule: [
             value => value.length > 0 || 'required',
           ],
@@ -182,11 +209,13 @@ export default {
           }).then(response => {
             this.addswagdialog = false
             this.dialog = false
-            console.log(response)
+            this.snackbar = true
+            this.snackbarText = "Swag has been added. It will be displayed after verification."
           }).catch(error => {
             this.addswagdialog = false
             this.dialog = false
-            console.log(error.response.data)
+            this.snackbar = true
+            this.snackbarText = "Failed to add swag. Please try again."
           })
         }
       }
@@ -195,7 +224,7 @@ export default {
 </script>
 
 <style scoped>
-.dialogcloseicon::before{
+.btns::before{
   background-color: transparent;
 }
 </style>

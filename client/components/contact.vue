@@ -12,7 +12,7 @@
           v-bind="attrs"
           v-on="on"
           :ripple=false
-          class="contactbtn ml-5"
+          class="btns ml-5"
         >
           Contact
         </v-btn>
@@ -27,7 +27,7 @@
           <v-spacer></v-spacer>
           <v-btn
             :ripple=false
-            class="dialogcloseicon mr-2"
+            class="btns mr-2"
             icon
             light
             @click="dialog = false"
@@ -87,10 +87,11 @@
                   <div
                     class="mt-16 ml-3"
                   >
-                    <h1>Need Help?</h1>
+                    <h2>Need Help? Contact us :)</h2>
                     <v-btn
                       outlined
                       class="mt-7"
+                      :ripple=false
                       @click="sendmessage"
                     >
                       Send Message
@@ -119,7 +120,7 @@
           v-bind="attrs"
           :ripple=false
           @click="snackbar = false"
-          class="snackbarclosebtn"
+          class="btns"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -168,13 +169,7 @@ export default {
 </script>
 
 <style scoped>
-.dialogcloseicon::before{
-  background-color: transparent;
-}
-.snackbarclosebtn::before{
-  background-color: transparent;
-}
-.contactbtn::before{
+.btns::before{
   background-color: transparent;
 }
 </style>
