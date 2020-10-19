@@ -21,7 +21,7 @@
         >
           <v-toolbar-title
             class="ml-2"
-          >Add new swag details</v-toolbar-title>
+          >Add new swag</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn
             :ripple=false
@@ -102,6 +102,15 @@
                     >
                       Add Swag
                     </v-btn>
+                  </div>
+                  <div
+                    class="mt-16"
+                  >
+                    <span
+                      class="text-body-2"
+                    >
+                      Swags will be listed after it is verified.
+                    </span>
                   </div>
                 </center>
               </v-col>
