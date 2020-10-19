@@ -8,6 +8,7 @@
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <addswag />
+      <contact />
     </v-app-bar>
     <v-main>
       <v-container>
@@ -29,6 +30,7 @@
 
 <script>
 import addswag from '../components/addswag'
+import contact from '../components/contact'
 
 export default {
   data () {
