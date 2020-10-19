@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const admin = require('firebase-admin')
 const cors = require('cors')
 const multer = require('multer')
@@ -12,7 +13,7 @@ app.use(express.urlencoded({extended: false}))
 // Initialize firebase admin SDK
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount.serviceAccountKey),
-    storageBucket: "swagfordevs.appspot.com"
+    storageBucket: process.env.STORAGEBUCKET
 })
 
 // firestore
@@ -35,7 +36,7 @@ app.get('/', async(req, res) => {
     try {
         const allswags = []
         const swags = db.collection('swagDetails').orderBy("createdAt", "desc")
-        const snapshot = await swags.get()
+        const snapshot = await swags.where('verified', '==', true).get()
         snapshot.forEach(doc => {
             allswags.push({id: doc.id, name: doc.data().name, description: doc.data().description, url: doc.data().url, imgUrl: doc.data().imgUrl})
         })
@@ -82,6 +83,7 @@ app.post('/addswag', async(req, res) => {
                 description: description,
                 url: url,
                 imgUrl: publicUrl,
+                verified: false,
                 createdAt: new Date()
             }
         
@@ -99,7 +101,7 @@ app.post('/addswag', async(req, res) => {
 
 
 
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
     console.log(`🚀Server listening on port: ${PORT}`)
 })
