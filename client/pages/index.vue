@@ -11,7 +11,7 @@
     class="mt-10"
   >
     <div
-      v-if="swags.length == 0"
+      v-if="fetching"
     >
       <center>
         <p>Getting the awesome list of swags...</p>
@@ -28,40 +28,68 @@
     <div
       v-else
     >
-      <v-row>
-        <v-col
-          v-for="(swag, index) in swags"
-          :key="swag.id"
-          cols="12"
-          sm="4"
-        >
-          <v-card
-            max-width=350
+      <div
+        v-if="fetchStatus"
+      >
+        <v-row>
+          <v-col
+            v-for="(swag, index) in swags"
+            :key="swag.id"
+            cols="12"
+            sm="4"
           >
-            <v-card-title>
-              {{ swag.name }}
-            </v-card-title>
-            <center>
-              <v-img 
-                :src="swag.imgUrl"
-                height="300px"
-                width="340px"
-              ></v-img>
-            </center>
+            <v-card
+              max-width=350
+            >
+              <v-card-title>
+                {{ swag.name }}
+              </v-card-title>
+              <center>
+                <v-img 
+                  :src="swag.imgUrl"
+                  height="300px"
+                  width="340px"
+                ></v-img>
+              </center>
+              <v-card-text>
+                {{ swag.description }}
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  outlined
+                  @click="openSwagDetails(index)"
+                >
+                  Check it here
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+      <div
+        v-else
+      >
+        <center>
+          <v-card
+            flat
+            max-width=500
+          >
             <v-card-text>
-              {{ swag.description }}
-            </v-card-text>
-            <v-card-actions>
+              <p
+                class="text-body-1"
+              >Failed to fetch data.</p>
               <v-btn
-                outlined
-                @click="openSwagDetails(index)"
+                text
+                :ripple=false
+                @click="tryagain"
+                class="tryagainbtn"
               >
-                Check it here
+                Try again
               </v-btn>
-            </v-card-actions>
+            </v-card-text>
           </v-card>
-        </v-col>
-      </v-row>
+        </center>
+      </div>
     </div>
   </div>
 </div>
@@ -72,19 +100,29 @@
 export default {
   data() {
     return {
-      swags: []
+      swags: [],
+      fetching: true,
+      fetchStatus: false
     }
   },
   methods: {
    fetchData() {
+     this.fetching = true 
      this.$axios.$get('/').then(response => {
+       this.fetching = false
+       this.fetchStatus = true
        this.swags = response
      }).catch(error => {
+       this.fetching = false
+       this.fetchStatus = false
        console.log(error)
      })
    },
    openSwagDetails(index) {
      window.open(this.swags[index].url)
+   },
+   tryagain() {
+     this.fetchData()
    }
   },
   created() {
@@ -98,5 +136,8 @@ hr {
     border: 1px solid gray;
     border-radius: 5px;
     width: 9%;
+}
+.tryagainbtn::before {
+  background-color: transparent;
 }
 </style>
