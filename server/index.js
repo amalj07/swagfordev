@@ -36,7 +36,7 @@ app.get('/', async(req, res) => {
     try {
         const allswags = []
         const swags = db.collection('swagDetails').orderBy("createdAt", "desc")
-        const snapshot = await swags.get()
+        const snapshot = await swags.where('verified', '==', true).get()
         snapshot.forEach(doc => {
             allswags.push({id: doc.id, name: doc.data().name, description: doc.data().description, url: doc.data().url, imgUrl: doc.data().imgUrl})
         })
@@ -83,6 +83,7 @@ app.post('/addswag', async(req, res) => {
                 description: description,
                 url: url,
                 imgUrl: publicUrl,
+                verified: false,
                 createdAt: new Date()
             }
         
