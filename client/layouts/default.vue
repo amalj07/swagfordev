@@ -18,6 +18,11 @@
       :absolute="!fixed"
       app
     >
+      <p
+        class="mx-auto text-body-2"
+      >
+        swagfordevs
+      </p>
     </v-footer>
   </v-app>
 </template>
