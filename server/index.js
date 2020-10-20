@@ -9,6 +9,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
+app.use(express.json({extended: false}))
 
 // Initialize firebase admin SDK
 admin.initializeApp({
@@ -31,7 +32,7 @@ const upload = multer({
 })
 app.use(upload.any())
 
-
+// Fetch all swags
 app.get('/', async(req, res) => {
     try {
         const allswags = []
@@ -48,6 +49,7 @@ app.get('/', async(req, res) => {
     }
 })
 
+// Add new swag
 app.post('/addswag', async(req, res) => {
     try {
         const { name, description, url, } = req.body
@@ -87,8 +89,8 @@ app.post('/addswag', async(req, res) => {
                 createdAt: new Date()
             }
         
-            const result = await db.collection('swagDetails').add(newSwag)
-            res.status(200).send(`swag id: ${result.id}`)
+            await db.collection('swagDetails').add(newSwag)
+            res.status(200).send(`swag added`)
         })
     
     
@@ -99,7 +101,24 @@ app.post('/addswag', async(req, res) => {
     }
 })
 
-
+// Add new message
+app.post('/newmsg', async(req, res) => {
+    try {
+        const { name, email, message } = req.body
+    
+        const newMsg = {
+            name: name,
+            email: email,
+            message: message
+        }
+    
+        await db.collection('messages').add(newMsg)
+        res.status(200).send("Message added")
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("Failed to add message")
+    }
+})
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
