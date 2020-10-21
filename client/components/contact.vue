@@ -111,7 +111,7 @@
       top
       content-class="grey--text text--darken-3"
     >
-      Thankyou for contacting us. We will get back to you shortly.
+      {{ snackbarText }}
 
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -135,6 +135,7 @@ export default {
         return {
           dialog: false,
           snackbar: false,
+          snackbarText: "",
           user: {
             name: "",
             email: "",
@@ -157,9 +158,11 @@ export default {
             message: this.user.message
           }).then(response => {
             this.snackbar = true
+            this.snackbarText = "Thanks for contacting us. We will get back to you shortly"
             this.dialog = false
           }).catch(error => {
             this.snackbar = true
+            this.snackbarText = "Failed to contact support team. Please try again later."
             this.dialog = false
           })
         }

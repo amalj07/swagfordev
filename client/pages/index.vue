@@ -77,7 +77,7 @@
             <v-card-text>
               <p
                 class="text-body-1"
-              >Failed to fetch data.</p>
+              >Failed to fetch swags.</p>
               <v-btn
                 text
                 :ripple=false
